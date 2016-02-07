@@ -4,6 +4,7 @@
 
 from tournament import *
 
+
 def testDeleteMatches():
     deleteMatches()
     print "1. Old matches can be deleted."
@@ -63,8 +64,8 @@ def testStandingsBeforeMatches():
     registerPlayer("Randy Schwartz")
     standings = playerStandings()
     if len(standings) < 2:
-        raise ValueError("Players should appear in playerStandings even before "
-                         "they have played any matches.")
+        raise ValueError("Players should appear in playerStandings even before"
+                         " they have played any matches.")
     elif len(standings) > 2:
         raise ValueError("Only registered players should appear in standings.")
     if len(standings[0]) != 4:
@@ -74,9 +75,10 @@ def testStandingsBeforeMatches():
         raise ValueError(
             "Newly registered players should have no matches or wins.")
     if set([name1, name2]) != set(["Melpomene Murray", "Randy Schwartz"]):
-        raise ValueError("Registered players' names should appear in standings, "
-                         "even if they have no matches played.")
-    print "6. Newly registered players appear in the standings with no matches."
+        raise ValueError("Registered players' names should appear in "
+                         "standings, even if they have no matches played.")
+    print "6. Newly registered players appear in the standings with" \
+        " no matches."
 
 
 def testReportMatches():
@@ -97,8 +99,46 @@ def testReportMatches():
         if i in (id1, id3) and w != 1:
             raise ValueError("Each match winner should have one win recorded.")
         elif i in (id2, id4) and w != 0:
-            raise ValueError("Each match loser should have zero wins recorded.")
+            raise ValueError("Each match loser should have zero wins "
+                             "recorded.")
     print "7. After a match, players have updated standings."
+
+
+def testReportMatches8():
+    # Expand test to 8 players, print out standings and pairings after match
+    deleteMatches()
+    deletePlayers()
+    registerPlayer("player1")
+    registerPlayer("player2")
+    registerPlayer("player3")
+    registerPlayer("player4")
+    registerPlayer("player5")
+    registerPlayer("player6")
+    registerPlayer("player7")
+    registerPlayer("player8")
+    standings = playerStandings()
+    [id1, id2, id3, id4, id5, id6, id7, id8] = [row[0] for row in standings]
+    reportMatch(id1, id2)
+    reportMatch(id3, id4)
+    reportMatch(id5, id6)
+    reportMatch(id7, id8)
+    standings = playerStandings()
+    for (i, n, w, m) in standings:
+        if m != 1:
+            raise ValueError("Each player should have one match recorded.")
+        if i in (id1, id3, id5, id7) and w != 1:
+            raise ValueError("Each match winner should have one win recorded.")
+        elif i in (id2, id4, id6, id8) and w != 0:
+            raise ValueError("Each match loser should have zero wins "
+                             "recorded.")
+    print "9. After a match, players have updated standings."
+    pairings = swissPairings()
+    if len(pairings) != 4:
+        raise ValueError(
+            "For eight players, swissPairings should return four pairs.")
+    print "10. After one match, players with one win are paired."
+    print standings
+    print pairings
 
 
 def testPairings():
@@ -113,6 +153,7 @@ def testPairings():
     reportMatch(id1, id2)
     reportMatch(id3, id4)
     pairings = swissPairings()
+
     if len(pairings) != 2:
         raise ValueError(
             "For four players, swissPairings should return two pairs.")
@@ -135,5 +176,6 @@ if __name__ == '__main__':
     testReportMatches()
     testPairings()
     print "Success!  All tests pass!"
-
-
+    print "Success test"
+    testReportMatches8()
+    print "Success! Using 8 players, tests pass"
